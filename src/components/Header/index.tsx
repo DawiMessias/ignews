@@ -1,6 +1,7 @@
 import styled from "./style.module.scss";
 import logoSvg from "../../images/logo.svg"
 import Image from 'next/image'
+import { SignInButton } from "../SignInButton";
 
 export function Header() {
   return(
@@ -16,6 +17,8 @@ export function Header() {
           <a className={styled.active}>Home</a>
           <a>Posts</a>
         </nav>
+
+        <SignInButton />
       </div>
     </header>
   )

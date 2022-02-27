@@ -13,7 +13,7 @@ export function Header() {
          height={50} 
         />
         <nav>
-          <a>Home</a>
+          <a className={styled.active}>Home</a>
           <a>Posts</a>
         </nav>
       </div>

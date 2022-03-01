@@ -3,7 +3,18 @@ import Image from 'next/image'
 import { SubscriptButton } from "../components/SubscripeButton"
 import avatarSvg from "../images/avatar.svg"
 import styled from "./home.module.scss"
-export default function Home() {
+import { GetServerSideProps } from "next"
+import { stripe } from "../services/stripe"
+
+interface HomeProps {
+  product: {
+    priceId: string,
+    amount: number,
+  }
+}
+
+export default function Home({ product }: HomeProps) {
+  console.log(product)
   return (
     <>
       <Head >
@@ -16,7 +27,7 @@ export default function Home() {
           <h1>News about the <span>React </span>world.</h1>
           <p>
             Get te acess to all posts <br/>
-            <span>for $9.90 month</span>
+            <span>for  month</span>
           </p>
           <SubscriptButton />
         </section>  
@@ -30,4 +41,22 @@ export default function Home() {
       </main>
     </>
   )
+}
+
+export const getSeverSideProps: GetServerSideProps = async () => {
+  const price = await stripe.prices.retrieve("price_1KXvtAJ59ZxR8QwFRsKk8nPE", {
+      expand: ["product"]
+  })
+  
+  const product ={
+    priceId: price.id,
+    amount: price.unit_amount / 100,
+  };
+  
+  console.log(product)
+  return {
+    props: {
+      product,
+    }
+  }
 }

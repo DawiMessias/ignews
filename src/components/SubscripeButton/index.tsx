@@ -1,5 +1,10 @@
 import styled from "./styled.module.scss"
-export function SubscriptButton() {
+
+interface SubscribeButton {
+    priceId: string;
+}
+
+export function SubscriptButton({priceId}: SubscribeButton) {
     return (
         <button 
             type="button"

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { SubscriptButton } from "../components/SubscripeButton"
 import avatarSvg from "../images/avatar.svg"
 import styled from "./home.module.scss"
-import { GetServerSideProps } from "next"
+import { GetStaticProps } from "next"
 import { stripe } from "../services/stripe"
 
 interface HomeProps {
@@ -14,7 +14,6 @@ interface HomeProps {
 }
 
 export default function Home({ product }: HomeProps) {
-  console.log(product)
   return (
     <>
       <Head >
@@ -27,9 +26,9 @@ export default function Home({ product }: HomeProps) {
           <h1>News about the <span>React </span>world.</h1>
           <p>
             Get te acess to all posts <br/>
-            <span>for  month</span>
+            <span>for {product.amount} month</span>
           </p>
-          <SubscriptButton />
+          <SubscriptButton  priceId={product.priceId}/>
         </section>  
 
         <Image 
@@ -43,20 +42,22 @@ export default function Home({ product }: HomeProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const price = await stripe.prices.retrieve("price_1KXvtAJ59ZxR8QwFRsKk8nPE", {
-      expand: ["product"]
-  })
+export const getStaticProps: GetStaticProps = async () => {
+  const price = await stripe.prices.retrieve("price_1KXvtAJ59ZxR8QwFRsKk8nPE")
   
   const product ={
     priceId: price.id,
-    amount: price.unit_amount / 100,
+    amount: new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(price.unit_amount / 100),
   };
   
   console.log(product)
   return {
     props: {
       product,
-    }
+    },
+    revalidate: 60 * 60 * 24, // 24 hours
   }
 }

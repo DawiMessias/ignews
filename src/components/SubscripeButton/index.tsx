@@ -1,5 +1,4 @@
 import styled from "./styled.module.scss"
-
 interface SubscribeButton {
     priceId: string;
 }

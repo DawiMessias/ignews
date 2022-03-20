@@ -16,7 +16,8 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, email }): Promise<boolean> { 
+    async signIn({ user, account, profile }) { 
+      const { email } = user
      try {
        await fauna.query(
          q.Create(
@@ -28,7 +29,7 @@ export default NextAuth({
      }catch (err){
         console.log(err)
         return false
-    } 
+      } 
     }
   }
 })

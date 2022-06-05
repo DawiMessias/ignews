@@ -1,0 +1,21 @@
+{
+  "id": "5192623b-37da-4c49-8cc9-7e320dea66f6",
+  "uid": "fuga-voluptatibus-omnis",
+  "type": "Publication",
+  "data": {
+    "title": [
+      {
+        "type": "paragraph",
+        "text": "Tempor occaecat ex aliqua irure amet eu exercitation pariatur ut sint dolore.",
+        "spans": []
+      }
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "text": "Sint minim est esse in eu deserunt pariatur officia enim adipisicing. Incididunt sunt excepteur commodo dolore ipsum reprehenderit pariatur id excepteur consectetur. Sunt consectetur enim aliquip minim ut ea dolor anim non laborum nulla consequat.",
+        "spans": []
+      }
+    ]
+  }
+}

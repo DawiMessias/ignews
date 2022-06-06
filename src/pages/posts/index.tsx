@@ -3,8 +3,19 @@ import Head from "next/head"
 import Prismic from "@prismicio/client"
 import { getPrismicClient } from "../../services/prismic"
 import styles from "./styles.module.scss"
+import { RichText } from "prismic-dom"
 
-export default function Posts() {
+type Post = {
+  slug: string,
+  title: string,
+  excerpt: string,
+  updatedAt: string
+}
+
+interface PostProps {
+  posts: Post[]
+}
+export default function Posts({posts}: PostProps) {
   return (
     <>
       <Head>
@@ -13,18 +24,13 @@ export default function Posts() {
 
           <main className={styles.container}>
             <div className={styles.posts}>
-              <a href="#">
-                <time>26 de Abr de 2022</time>
-                <strong>Next Level Week: os caminhos que trilhamos até aqui</strong>
-                <p>Uma semana inteira de conteúdos práticos voltados para programação. O objetivo é específico e direto: treinar e capacitar profissionais que procuram incluir em seus portfólios o que há de mais novo e tendência no mercado de TI no Brasil e no mundo.</p>
-              </a>
-
-              <a href="#">
-                <time>25 de Fev de 2022</time>
-                <strong>Elixir: por trás da linguagem de programação brasileira</strong>
-                <p>Elixir, antes de tudo, vale ressaltar, é uma linguagem de berço brasileiro, criada, desenvolvida e mantida por José Valim, em 2011, junto com o núcleo de Desenvolvimento e Pesquisa (R&D) da Plataformatec.</p>
-              </a>
-
+              {posts.map(posts => (
+                <a key={posts.slug} href="#">
+                  <time>{posts.updatedAt}</time>
+                  <strong>{posts.title}</strong>
+                  <p>{posts.excerpt}</p>
+                </a>
+              ))}  
             </div>
           </main>
     </>
@@ -35,14 +41,28 @@ export const getStaticProps: GetStaticProps = async() => {
   const prismic = getPrismicClient()
 
   const response = await prismic.query([
-    Prismic.predicates.at("document.type", "publication")
+    Prismic.predicates.at("document.type", "Publication")
   ], {
-    fetch: ["publication.title", "publication.content"],
-    pageSize: 15
+    fetch: ["title", "content"],
+    pageSize: 100,
+    lang: 'pt-br'
   })
-  console.log(JSON.stringify(response, null, 2))
+  // console.log(JSON.stringify(response, null, 2))
+
+  const posts = response.results.map(post => {
+    return {
+      slug: post.uid,
+      title: RichText.asText(post.data.title),
+      excerpt: post.data.content.find(content => content.type === "paragraph")?.text ?? "",
+      updatedAt: new Date(post.last_publication_date).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      })
+    }
+  })
 
   return {
-    props: {}
+    props: {posts}
   }
 }

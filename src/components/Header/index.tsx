@@ -2,8 +2,11 @@ import styled from "./style.module.scss";
 import logoSvg from "../../images/logo.svg"
 import Image from 'next/image'
 import { SignInButton } from "../SignInButton";
+import  Link  from "next/link"
+import { useRouter } from "next/router"
 
 export function Header() {
+  const { asPath } = useRouter();
   return(
     <header className={styled.headerContainer}>
       <div className={styled.headerContent}>
@@ -14,8 +17,12 @@ export function Header() {
          height={50} 
         />
         <nav>
-          <a className={styled.active}>Home</a>
-          <a>Posts</a>
+          <Link href="/" >
+            <a className={styled.active}>Home</a>
+          </Link >
+          <Link  href="/posts" prefetch>
+            <a>Posts</a>
+          </Link> 
         </nav>
 
         <SignInButton />
